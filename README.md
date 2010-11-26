@@ -18,7 +18,7 @@ Usage
 -----
 The following example should demonstrate how to use versioning well :
 
-<p>
+<pre>
 class Thing
   include MongoMapper::Document
 
@@ -82,7 +82,7 @@ thing.version_at(:latest)
 
 thing.version_at(10)
 #=> nil
-</p>
+</pre>
 
 Problems or Questions?
 ----------------------
