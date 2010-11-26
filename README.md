@@ -8,11 +8,11 @@ $ gem install mm-versionable
 
 Note on Patches/Pull Requests
 -----------------------------
-*Fork the project
-*Make your feature addition or bug fix.
-*Add tests for it. This is critical so that things dont break unintentionally.
-*Commit, do not make any changes in the rakefile, version, or history. (If you want to have your own version, that is fine but bump the version in a commit by itself so I can ignore it when I pull)
-*Send me a pull requests.
+* Fork the project
+* Make your feature addition or bug fix.
+* Add tests for it. This is critical so that things dont break unintentionally.
+* Commit, do not make any changes in the rakefile, version, or history. (If you want to have your own version, that is fine but bump the version in a commit by itself so I can ignore it when I pull)
+* Send me a pull requests.
 
 Usage
 -----
