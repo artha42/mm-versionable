@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
     "lib/versionable/models/version.rb",
     "lib/versionable/plugins/versionable.rb",
     "lib/versionable/version.rb",
-    "mongomapper-versionable.gemspec",
+    "mm-versionable.gemspec",
     "test/config/config.rb",
     "test/config/database.yml",
     "test/models/post.rb",
