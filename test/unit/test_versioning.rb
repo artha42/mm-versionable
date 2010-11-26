@@ -17,8 +17,8 @@ class VersioningTest < Test::Unit::TestCase
     should 'respond to method all_versions' do
       assert @user.respond_to?(:all_versions)
     end
-    should 'respond to method load_version' do
-      assert @user.respond_to?(:load_version)
+    should 'respond to method rollback' do
+      assert @user.respond_to?(:rollback)
     end
     should 'respond to method rollback!' do
       assert @user.respond_to?(:rollback!)
@@ -49,17 +49,17 @@ class VersioningTest < Test::Unit::TestCase
       assert @user.all_versions
       assert @user.all_versions.is_a?(Plucky::Query)
     end
-    should 'load first version on load_version :first' do
-      assert @user.load_version(:first).fname == 'dhruva'
+    should 'load first version on rollback :first' do
+      assert @user.rollback(:first).fname == 'dhruva'
       assert @user.version_number == 0
     end
-    should 'load last version on load_version :last' do
-      assert @user.load_version(:last).fname == 'Dhruva'
+    should 'load last version on rollback :last' do
+      assert @user.rollback(:last).fname == 'Dhruva'
       assert @user.posts.empty?
       assert @user.version_number == (@user.versions_count - 2)
     end
-    should 'load latest version on load_version :latest' do
-      assert @user.load_version(:latest).fname == 'Dhruva'
+    should 'load latest version on rollback :latest' do
+      assert @user.rollback(:latest).fname == 'Dhruva'
       assert !@user.posts.empty?
       assert @user.version_number == (@user.versions_count - 1)
     end

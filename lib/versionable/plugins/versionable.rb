@@ -51,7 +51,7 @@ module Versionable
         Version.where(:doc_id => self._id.to_s).sort(:pos.desc)
       end
 
-      define_method(:load_version) do |pos = nil|
+      define_method(:rollback) do |pos = nil|
         #The last version is always same as the current version, so -2 instead of -1
         pos = self.versions.count-2 if pos.nil?
         version = self.version_at(pos)
@@ -65,7 +65,7 @@ module Versionable
       end
       
       define_method(:rollback!) do |pos = nil|
-        self.load_version(pos)
+        self.rollback(pos)
 
         @rolling_back = true
         save!
