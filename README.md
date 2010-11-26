@@ -18,7 +18,7 @@ Usage
 -----
 The following example should demonstrate how to use versioning well :
 
-<pre>
+<p>
 class Thing
   include MongoMapper::Document
 
@@ -62,8 +62,11 @@ thing.diff(:name, 0, 1)
 thing.diff(:name, 0, 1, :ascii)
 #=> "{\"Change\" >> \"Dhruva\"} {\"Thing\" >> \"Sagar\"}"
 
-thing.current_version
+thing.diff(:name, 0, 1, :color)
 #=> "\e[31mChange\e[0m\e[32mDhruva\e[0m \e[31mThing\e[0m\e[32mSagar\e[0m"
+
+thing.current_version
+#=> #<Version _id: BSON::ObjectId('4cf03822f61aa30fd8000004'), data: {"_id"=>BSON::ObjectId('4cf03816f61aa30fd8000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Change Thing", "date"=>2010-11-26 22:43:34 UTC}, date: 2010-11-26 22:43:46 UTC, pos: nil, doc_id: "4cf03816f61aa30fd8000001", message: nil, updater_id: nil>
 
 thing.version_at(:first)
 #=> #<Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Dhruva Sagar", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>
@@ -79,7 +82,7 @@ thing.version_at(:latest)
 
 thing.version_at(10)
 #=> nil
-</pre>
+</p>
 
 Problems or Questions?
 ----------------------
