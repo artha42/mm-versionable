@@ -4,8 +4,8 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{mongomapper-versionable}
-  s.version = "0.1"
+  s.name = %q{mm-versionable}
+  s.version = "0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dhruva Sagar"]
@@ -15,12 +15,30 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [
     "README.md"
   ]
-  s.homepage = %q{http://github.com/dhruvasagar/mongomapper-versionable}
+  s.files = [
+    "README.md",
+    "Rakefile",
+    "config.ru",
+    "lib/versionable.rb",
+    "lib/versionable/models/version.rb",
+    "lib/versionable/plugins/versionable.rb",
+    "lib/versionable/version.rb",
+    "mongomapper-versionable.gemspec",
+    "test/config/config.rb",
+    "test/config/database.yml",
+    "test/models/post.rb",
+    "test/models/user.rb",
+    "test/performance/read_write.rb",
+    "test/test_helper.rb",
+    "test/unit/test_versioning.rb"
+  ]
+  s.homepage = %q{https://github.com/artha42/mm-versionable/}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{A MongoMapper extension for document versioning}
   s.test_files = [
     "test/config/config.rb",
+    "test/models/post.rb",
     "test/models/user.rb",
     "test/performance/read_write.rb",
     "test/test_helper.rb",

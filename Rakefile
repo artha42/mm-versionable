@@ -24,11 +24,11 @@ end
 task :default => 'test:units'
 
 Jeweler::Tasks.new do |gem|
-  gem.name          = 'mongomapper-versionable'
+  gem.name          = 'mm-versionable'
   gem.summary       = 'A MongoMapper extension for document versioning'
   gem.description   = 'A MongoMapper extension that enables document versionable'
   gem.email         = 'dhruva.sagar@gmail.com'
-  gem.homepage      = 'http://github.com/dhruvasagar/mongomapper-versionable'
+  gem.homepage      = 'https://github.com/artha42/mm-versionable/'
   gem.authors       = ['Dhruva Sagar']
   gem.version       = Versionable::Version
 
