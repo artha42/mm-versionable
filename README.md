@@ -92,4 +92,4 @@ I am available on IRC with the name dhruvasagar, you could alternatively also co
 
 Copyright
 ---------
-See LICENCE for details.
+See LICENSE for details.
