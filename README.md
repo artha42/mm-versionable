@@ -41,44 +41,44 @@ thing.versions_count
 #=> 2
 
 thing.versions
-#=> [#<Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Dhruva Sagar", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>, #<Version _id: BSON::ObjectId('4cef96c4f61aa33621000003'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Change Thing", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 1, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>]
+#=&gt; [#&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Dhruva Sagar&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;, #&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000003'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Change Thing&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 1, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;]
 
 thing.all_versions
-#=> #<Plucky::Query doc_id: "4cef96c4f61aa33621000001", sort: [["pos", -1]]> 
+#=&gt; #&lt;Plucky::Query doc_id: &quot;4cef96c4f61aa33621000001&quot;, sort: [[&quot;pos&quot;, -1]]&gt; 
 
 thing.rollback(:first)
-#=> #<Thing _id: BSON::ObjectId('4cef96c4f61aa33621000001'), version_message: nil, version_number: 0, name: "Dhruva Sagar", date: 2010-11-26 11:15:16 UTC>
+#=&gt; #&lt;Thing _id: BSON::ObjectId('4cef96c4f61aa33621000001'), version_message: nil, version_number: 0, name: &quot;Dhruva Sagar&quot;, date: 2010-11-26 11:15:16 UTC&gt;
 
 thing.rollback(:last)
-#=> #<Thing _id: BSON::ObjectId('4cef96c4f61aa33621000001'), version_message: nil, version_number: 0, name: "Dhruva Sagar", date: 2010-11-26 11:15:16 UTC>
+#=&gt; #&lt;Thing _id: BSON::ObjectId('4cef96c4f61aa33621000001'), version_message: nil, version_number: 0, name: &quot;Dhruva Sagar&quot;, date: 2010-11-26 11:15:16 UTC&gt;
 
 thing.rollback!(:latest)
-#=> #<Thing _id: BSON::ObjectId('4cef96c4f61aa33621000001'), version_message: nil, version_number: 1, name: "Change Thing", date: 2010-11-26 11:15:16 UTC>
+#=&gt; #&lt;Thing _id: BSON::ObjectId('4cef96c4f61aa33621000001'), version_message: nil, version_number: 1, name: &quot;Change Thing&quot;, date: 2010-11-26 11:15:16 UTC&gt;
 #rollback! saves the document as well
 
 thing.diff(:name, 0, 1)
-#=> "<del class=\"differ\">Change</del><ins class=\"differ\">Dhruva</ins> <del class=\"differ\">Thing</del><ins class=\"differ\">Sagar</ins>"
+#=&gt; &quot;&lt;del class=\&quot;differ\&quot;&gt;Change&lt;/del&gt;&lt;ins class=\&quot;differ\&quot;&gt;Dhruva&lt;/ins&gt; &lt;del class=\&quot;differ\&quot;&gt;Thing&lt;/del&gt;&lt;ins class=\&quot;differ\&quot;&gt;Sagar&lt;/ins&gt;&quot;
 
 thing.diff(:name, 0, 1, :ascii)
-#=> "{\"Change\" >> \"Dhruva\"} {\"Thing\" >> \"Sagar\"}"
+#=&gt; &quot;{\&quot;Change\&quot; &gt;&gt; \&quot;Dhruva\&quot;} {\&quot;Thing\&quot; &gt;&gt; \&quot;Sagar\&quot;}&quot;
 
 thing.diff(:name, 0, 1, :color)
-#=> "\e[31mChange\e[0m\e[32mDhruva\e[0m \e[31mThing\e[0m\e[32mSagar\e[0m"
+#=&gt; &quot;\e[31mChange\e[0m\e[32mDhruva\e[0m \e[31mThing\e[0m\e[32mSagar\e[0m&quot;
 
 thing.current_version
-#=> #<Version _id: BSON::ObjectId('4cf03822f61aa30fd8000004'), data: {"_id"=>BSON::ObjectId('4cf03816f61aa30fd8000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Change Thing", "date"=>2010-11-26 22:43:34 UTC}, date: 2010-11-26 22:43:46 UTC, pos: nil, doc_id: "4cf03816f61aa30fd8000001", message: nil, updater_id: nil>
+#=&gt; #&lt;Version _id: BSON::ObjectId('4cf03822f61aa30fd8000004'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cf03816f61aa30fd8000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Change Thing&quot;, &quot;date&quot;=&gt;2010-11-26 22:43:34 UTC}, date: 2010-11-26 22:43:46 UTC, pos: nil, doc_id: &quot;4cf03816f61aa30fd8000001&quot;, message: nil, updater_id: nil&gt;
 
 thing.version_at(:first)
-#=> #<Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Dhruva Sagar", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>
+#=&gt; #&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Dhruva Sagar&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;
 
 thing.version_at(:current)
-#=> #<Version _id: BSON::ObjectId('4cef986df61aa33621000004'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>1, "name"=>"Change Thing", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:22:21 UTC, pos: nil, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>
+#=&gt; #&lt;Version _id: BSON::ObjectId('4cef986df61aa33621000004'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;1, &quot;name&quot;=&gt;&quot;Change Thing&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:22:21 UTC, pos: nil, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;
 
 thing.version_at(:last)
-#=> #<Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Dhruva Sagar", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>
+#=&gt; #&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Dhruva Sagar&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;
 
 thing.version_at(:latest)
-#=> #<Version _id: BSON::ObjectId('4cef96c4f61aa33621000003'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Change Thing", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 1, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>
+#=&gt; #&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000003'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Change Thing&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 1, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt; 
 
 thing.version_at(10)
 #=> nil
