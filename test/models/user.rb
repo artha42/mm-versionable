@@ -6,4 +6,6 @@ class User
   key :lname, String
   key :email, String
   key :address, String
+
+  many :posts
 end

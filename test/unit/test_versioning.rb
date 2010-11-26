@@ -54,11 +54,13 @@ class VersioningTest < Test::Unit::TestCase
       assert @user.version_number == 0
     end
     should 'load last version on load_version :last' do
-      assert @user.load_version(:last).fname == 'dhruva'
+      assert @user.load_version(:last).fname == 'Dhruva'
+      assert @user.posts.empty?
       assert @user.version_number == (@user.versions_count - 2)
     end
     should 'load latest version on load_version :latest' do
       assert @user.load_version(:latest).fname == 'Dhruva'
+      assert !@user.posts.empty?
       assert @user.version_number == (@user.versions_count - 1)
     end
     should 'revert to first version on rollback!' do
@@ -68,12 +70,14 @@ class VersioningTest < Test::Unit::TestCase
     end
     should 'revert to last version on rollback!' do
       @user.rollback!(:last)
-      assert @user.fname == 'dhruva'
+      assert @user.fname == 'Dhruva'
+      assert @user.posts.empty?
       assert @user.version_number == (@user.versions_count - 2)
     end
     should 'revert to latest version on rollback!' do
       @user.rollback!(:latest)
       assert @user.fname == 'Dhruva'
+      assert !@user.posts.empty?
       assert @user.version_number == (@user.versions_count - 1)
     end
   end
