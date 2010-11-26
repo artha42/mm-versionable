@@ -12,7 +12,7 @@ Note on Patches/Pull Requests
 * Make your feature addition or bug fix.
 * Add tests for it. This is critical so that things dont break unintentionally.
 * Commit, do not make any changes in the rakefile, version, or history. (If you want to have your own version, that is fine but bump the version in a commit by itself so I can ignore it when I pull)
-* Send me a pull requests.
+* Send me a pull request.
 
 Usage
 -----
@@ -22,7 +22,9 @@ The following example should demonstrate how to use versioning well :
 class Thing
   include MongoMapper::Document
 
-  enable_versioning :limit => 20 #:limit here defines the size of the version history that will be loaded into memory
+  enable_versioning :limit => 20
+  #:limit here defines the size of the version history that will be loaded into memory,
+  #By default, if not specified, the value is 10, if you wish to load all versions set it to 0
 
   key :name, String, :required => true
   key :date, Time
