@@ -1,6 +1,7 @@
 class User
   include MongoMapper::Document
-  plugin Versionable
+
+  enable_versioning :limit => 20
 
   key :fname, String
   key :lname, String

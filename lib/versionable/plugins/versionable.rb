@@ -1,13 +1,9 @@
 require 'versionable/models/version'
 
 module Versionable
-  def self.configure(model)
-    model.enable_versioning
-  end
-
   module InstanceMethods
     def save(options={})
-      save_version(options[:updater_id]) if self.respond_to?(:rolling_back) && !rolling_back
+      save_version(options.delete(:updater_id)) if self.respond_to?(:rolling_back) && !rolling_back
       super
     end
 
@@ -24,7 +20,7 @@ module Versionable
           version.updater_id = updater_id
           version.save
 
-          self.versions.shift
+          self.versions.shift if self.versions.count >= @limit
           self.versions << version
 
           @versions_count = @versions_count.to_i + 1
@@ -44,7 +40,8 @@ module Versionable
       end
 
       define_method(:versions) do
-        @versions ||= Version.all(:doc_id => self._id.to_s, :order => 'pos desc', :limit => (opts[:limit] || 10)).reverse
+        @limit ||= opts[:limit] || 10
+        @versions ||= Version.all(:doc_id => self._id.to_s, :order => 'pos desc', :limit => @limit).reverse
       end
 
       define_method(:all_versions) do
