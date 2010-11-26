@@ -16,6 +16,8 @@ Note on Patches/Pull Requests
 
 Usage
 -----
+The following example should demonstrate how to use versioning well :
+
   class Thing
     include MongoMapper::Document
 
