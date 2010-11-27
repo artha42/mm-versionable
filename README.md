@@ -88,8 +88,12 @@ thing.version_at(10)
 
 Problems or Questions?
 ----------------------
-Hit up on the mongomapper google group: http://groups.google.com/group/mongomapper
-Hop on IRC: irc://chat.freenode.net/#mongomapper
+Hit up on the mongomapper google group:
+http://groups.google.com/group/mongomapper
+
+Hop on IRC:
+irc://chat.freenode.net/#mongomapper
+
 I am available on IRC with the name dhruvasagar, you could alternatively also contact me directly on dhruva.sagar@gmail.com
 
 Copyright

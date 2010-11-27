@@ -6,7 +6,6 @@ MongoMapper.database = 'versionable_performance'
  
 class Foo
   include MongoMapper::Document
-  plugin Versionable
 
   enable_versioning
 
@@ -17,13 +16,28 @@ class Foo
 end
 Foo.collection.remove
 
-Benchmark.bm(5) do |x|
+class Bar
+  include MongoMapper::Document
+
+  key :approved, Boolean
+  key :count, Integer
+  key :approved_at, Time
+  key :expire_on, Date
+end
+Bar.collection.remove
+
+Benchmark.bm(22) do |x|
   ids = []
-  hhids = []
-  x.report("write   ") do
+  x.report("write with versioning   ") do
     1000.times { |i| ids << Foo.create(:count => 0, :approved => true, :approved_at => Time.now, :expire_on => Date.today).id }
   end
-  x.report("read    ") do
+  x.report("write without versioning") do
+    1000.times { |i| ids << Bar.create(:count => 0, :approved => true, :approved_at => Time.now, :expire_on => Date.today).id }
+  end
+  x.report("read with versioning    ") do
     ids.each { |id| Foo.first(:id => id) }
+  end
+  x.report("read without versioning ") do
+    ids.each { |id| Bar.first(:id => id) }
   end
 end
