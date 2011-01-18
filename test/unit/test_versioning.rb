@@ -8,6 +8,9 @@ class VersioningTest < Test::Unit::TestCase
     should 'respond to method version_message' do
       assert @user.respond_to?(:version_message)
     end
+    should 'respond to method version_message=' do
+      assert @user.respond_to?(:version_message=)
+    end
     should 'respond to method version_number' do
       assert @user.respond_to?(:version_number)
     end

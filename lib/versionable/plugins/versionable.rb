@@ -32,8 +32,15 @@ module Versionable
     def enable_versioning(opts={})
       attr_accessor :rolling_back
 
-      key :version_message, String
       key :version_number, Integer
+
+      define_method(:version_message) do
+        @version_message
+      end
+
+      define_method(:version_message=) do |message|
+        @version_message = message
+      end
 
       define_method(:versions_count) do
         @versions_count ||= Version.count(:doc_id => self._id.to_s)

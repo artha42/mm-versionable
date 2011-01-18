@@ -3,8 +3,8 @@ class Version
 
   key :data, Hash
   key :date, Time
-  key :pos, Integer
-  key :doc_id, String
+  key :pos, Integer, :index => true
+  key :doc_id, String, :index => true
   key :message, String
   key :updater_id, String
 
