@@ -2,6 +2,7 @@ require 'versionable/models/version'
 
 module Versionable
   module InstanceMethods
+    # Save new versions but only if the data changes
     def save(options={})
       save_version(options.delete(:updater_id)) if self.respond_to?(:rolling_back) && !rolling_back
       super
@@ -17,13 +18,15 @@ module Versionable
           else
             version.pos = self.versions.last.pos + 1
           end
-          version.updater_id = updater_id
-          version.save
+          if versions.last.try(:data) != version.data
+            version.updater_id = updater_id
+            version.save
 
-          self.versions.shift if self.versions.count >= @limit
-          self.versions << version
+            self.versions.shift if self.versions.count >= @limit
+            self.versions << version
 
-          @versions_count = @versions_count.to_i + 1
+            @versions_count = @versions_count.to_i + 1
+          end
         end
       end
   end

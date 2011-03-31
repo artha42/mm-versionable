@@ -77,11 +77,17 @@ class VersioningTest < Test::Unit::TestCase
       assert @user.posts.empty?
       assert @user.version_number == (@user.versions_count - 2)
     end
+    should 'only create a new version when the data changes' do
+      versions_count = @user.versions_count
+      @user.save
+      assert_equal versions_count, @user.versions_count
+    end
     should 'revert to latest version on rollback!' do
       @user.rollback!(:latest)
       assert @user.fname == 'Dhruva'
       assert !@user.posts.empty?
       assert @user.version_number == (@user.versions_count - 1)
     end
+
   end
 end
