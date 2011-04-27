@@ -60,7 +60,8 @@ module Versionable
         Version.where(:doc_id => self._id.to_s).sort(:pos.desc)
       end
 
-      define_method(:rollback) do |pos = nil|
+      define_method(:rollback) do |*args|
+        pos = args.first #workaround for optional args in ruby1.8
         #The last version is always same as the current version, so -2 instead of -1
         pos = self.versions.count-2 if pos.nil?
         version = self.version_at(pos)
@@ -73,7 +74,8 @@ module Versionable
         self
       end
 
-      define_method(:rollback!) do |pos = nil|
+      define_method(:rollback!) do |*args|
+        pos = args.first #workaround for optional args in ruby1.8
         self.rollback(pos)
 
         @rolling_back = true
@@ -83,7 +85,8 @@ module Versionable
         self
       end
 
-      define_method(:diff) do |key, pos1, pos2, format = :html|
+      define_method(:diff) do |key, pos1, pos2, *optional_format|
+        format = optional_format.first || :html #workaround for optional args in ruby1.8
         version1 = self.version_at(pos1)
         version2 = self.version_at(pos2)
 
