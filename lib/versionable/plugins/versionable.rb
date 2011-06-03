@@ -10,34 +10,34 @@ module Versionable
       super
     end
 
-    private
-      def save_version(updater_id=nil)
-        if self.respond_to?(:versions)
-          version = self.current_version
-          version.message = self.version_message
-          if self.versions.empty?
-            version.pos = 0
-          else
-            version.pos = self.versions.last.pos + 1
-          end
-          if versions.last.try(:data) != version.data
-            version.updater_id = updater_id
-            version.save
+    def save_version(updater_id=nil)
+      if self.respond_to?(:versions)
+        version = self.current_version
+        version.message = self.version_message
+        if self.versions.empty?
+          version.pos = 0
+        else
+          version.pos = self.versions.last.pos + 1
+        end
+        if self.version_at(self.version_number).try(:data) != version.data
+          version.updater_id = updater_id
+          version.save
 
-            self.versions.shift if self.versions.count >= @limit
-            self.versions << version
+          self.versions.shift if self.versions.count >= @limit
+          self.versions << version
+          self.version_number = version.pos
 
-            @versions_count = @versions_count.to_i + 1
-          end
+          @versions_count = @versions_count.to_i + 1
         end
       end
+    end
   end
 
   module ClassMethods
     def enable_versioning(opts={})
       attr_accessor :rolling_back
 
-      key :version_number, Integer
+      key :version_number, Integer, :default => 0
 
       define_method(:version_message) do
         @version_message
@@ -91,7 +91,9 @@ module Versionable
       end
 
       define_method(:current_version) do
-        Version.new(:data => self.attributes, :date => Time.now, :doc_id => self._id.to_s)
+        data = self.attributes
+        data.delete(:version_number)
+        Version.new(:data => data, :date => Time.now, :doc_id => self._id.to_s)
       end
 
       define_method(:version_at) do |pos|

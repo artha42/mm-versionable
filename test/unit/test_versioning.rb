@@ -35,6 +35,9 @@ class VersioningTest < Test::Unit::TestCase
     should 'respond to method version_at' do
       assert @user.respond_to?(:version_at)
     end
+    should 'respond to method save_version' do
+      assert @user.respond_to?(:save_version)
+    end
   end
 
   context 'Version manipulations' do
@@ -87,6 +90,15 @@ class VersioningTest < Test::Unit::TestCase
       assert @user.fname == 'Dhruva'
       assert !@user.posts.empty?
       assert @user.version_number == (@user.versions_count - 1)
+    end
+    should 'create a new version without saving' do
+      user = User.create :fname => 'Dave', :lname => 'Smiggins'
+      initial_version_number = user.version_number
+      user.fname = 'Steve'
+      user.save_version
+      assert_equal user.version_number, user.versions.last.pos
+      user.reload
+      assert_equal initial_version_number, user.version_number
     end
 
   end
