@@ -1,6 +1,8 @@
 require 'versionable/models/version'
 
 module Versionable
+  extend ActiveSupport::Concern
+
   module InstanceMethods
     # Save new versions but only if the data changes
     def save(options={})
@@ -70,7 +72,7 @@ module Versionable
         self.version_number = version.pos
         self
       end
-      
+
       define_method(:rollback!) do |pos = nil|
         self.rollback(pos)
 
@@ -110,7 +112,7 @@ module Versionable
           index = self.versions.index {|v| v.pos == pos}
           version = self.versions[index] if index
           version ||= Version.first(:user_id => self._id.to_s, :pos => pos)
-          version 
+          version
         end
       end
     end
