@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'rake'
-require 'jeweler'
 
 require File.join(File.dirname(__FILE__), '/lib/versionable/version')
 
@@ -23,17 +22,14 @@ end
 
 task :default => 'test:units'
 
-Jeweler::Tasks.new do |gem|
-  gem.name          = 'mm-versionable'
-  gem.summary       = 'A MongoMapper extension for document versioning'
-  gem.description   = 'A MongoMapper extension that enables document versionable'
-  gem.email         = 'dhruva.sagar@gmail.com'
-  gem.homepage      = 'https://github.com/artha42/mm-versionable/'
-  gem.authors       = ['Dhruva Sagar']
-  gem.version       = Versionable::Version
-
-  gem.add_dependency('differ')
-  gem.add_dependency('mongo_mapper')
+desc 'Builds the gem'
+task :build do
+  sh 'gem build phr_repo.gemspec'
+    Dir.mkdir('pkg') unless File.directory?('pkg')
+      sh "mv phr_repo-#{HealthHiway::Version}.gem pkg/phr_repo-#{HealthHiway::Version}.gem"
 end
 
-Jeweler::GemcutterTasks.new
+desc 'Builds and Installs the gem'
+task :install => :build do
+  sh "gem install pkg/phr_repo-#{HealthHiway::Version}.gem"
+end
