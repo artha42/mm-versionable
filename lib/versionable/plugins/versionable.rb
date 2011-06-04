@@ -1,38 +1,43 @@
 require 'versionable/models/version'
 
 module Versionable
+  extend ActiveSupport::Concern
+
   module InstanceMethods
+    # Save new versions but only if the data changes
     def save(options={})
       save_version(options.delete(:updater_id)) if self.respond_to?(:rolling_back) && !rolling_back
       super
     end
 
-    private
-      def save_version(updater_id=nil)
-        if self.respond_to?(:versions)
-          version = self.current_version
-          version.message = self.version_message
-          if self.versions.empty?
-            version.pos = 0
-          else
-            version.pos = self.versions.last.pos + 1
-          end
+    def save_version(updater_id=nil)
+      if self.respond_to?(:versions)
+        version = self.current_version
+        version.message = self.version_message
+        if self.versions.empty?
+          version.pos = 0
+        else
+          version.pos = self.versions.last.pos + 1
+        end
+        if self.version_at(self.version_number).try(:data) != version.data
           version.updater_id = updater_id
           version.save
 
           self.versions.shift if self.versions.count >= @limit
           self.versions << version
+          self.version_number = version.pos
 
           @versions_count = @versions_count.to_i + 1
         end
       end
+    end
   end
 
   module ClassMethods
     def enable_versioning(opts={})
       attr_accessor :rolling_back
 
-      key :version_number, Integer
+      key :version_number, Integer, :default => 0
 
       define_method(:version_message) do
         @version_message
@@ -55,7 +60,8 @@ module Versionable
         Version.where(:doc_id => self._id.to_s).sort(:pos.desc)
       end
 
-      define_method(:rollback) do |pos = nil|
+      define_method(:rollback) do |*args|
+        pos = args.first #workaround for optional args in ruby1.8
         #The last version is always same as the current version, so -2 instead of -1
         pos = self.versions.count-2 if pos.nil?
         version = self.version_at(pos)
@@ -67,8 +73,9 @@ module Versionable
         self.version_number = version.pos
         self
       end
-      
-      define_method(:rollback!) do |pos = nil|
+
+      define_method(:rollback!) do |*args|
+        pos = args.first #workaround for optional args in ruby1.8
         self.rollback(pos)
 
         @rolling_back = true
@@ -78,7 +85,8 @@ module Versionable
         self
       end
 
-      define_method(:diff) do |key, pos1, pos2, format = :html|
+      define_method(:diff) do |key, pos1, pos2, *optional_format|
+        format = optional_format.first || :html #workaround for optional args in ruby1.8
         version1 = self.version_at(pos1)
         version2 = self.version_at(pos2)
 
@@ -86,7 +94,9 @@ module Versionable
       end
 
       define_method(:current_version) do
-        Version.new(:data => self.attributes, :date => Time.now, :doc_id => self._id.to_s)
+        data = self.attributes
+        data.delete(:version_number)
+        Version.new(:data => data, :date => Time.now, :doc_id => self._id.to_s)
       end
 
       define_method(:version_at) do |pos|
@@ -107,7 +117,7 @@ module Versionable
           index = self.versions.index {|v| v.pos == pos}
           version = self.versions[index] if index
           version ||= Version.first(:user_id => self._id.to_s, :pos => pos)
-          version 
+          version
         end
       end
     end
