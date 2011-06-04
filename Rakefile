@@ -24,12 +24,12 @@ task :default => 'test:units'
 
 desc 'Builds the gem'
 task :build do
-  sh 'gem build phr_repo.gemspec'
-    Dir.mkdir('pkg') unless File.directory?('pkg')
-      sh "mv phr_repo-#{HealthHiway::Version}.gem pkg/phr_repo-#{HealthHiway::Version}.gem"
+  sh 'gem build mm-versionable.gemspec'
+  Dir.mkdir('pkg') unless File.directory?('pkg')
+  sh "mv mm-versionable-#{Versionable::Version}.gem pkg/mm-versionable-#{Versionable::Version}.gem"
 end
 
 desc 'Builds and Installs the gem'
 task :install => :build do
-  sh "gem install pkg/phr_repo-#{HealthHiway::Version}.gem"
+  sh "gem install pkg/mm-versionable-#{Versionable::Version}.gem"
 end
