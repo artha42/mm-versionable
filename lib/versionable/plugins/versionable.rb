@@ -106,7 +106,7 @@ module Versionable
         when :first
           index = self.versions.index {|v| v.pos == 0}
           version = self.versions[index] if index
-          version ||= Version.first(:user_id => self._id.to_s, :pos => 0)
+          version ||= Version.first(:doc_id => self._id.to_s, :pos => 0)
           version
         when :last
           #The last version is always same as the current version, so -2 instead of -1
@@ -116,7 +116,7 @@ module Versionable
         else
           index = self.versions.index {|v| v.pos == pos}
           version = self.versions[index] if index
-          version ||= Version.first(:user_id => self._id.to_s, :pos => pos)
+          version ||= Version.first(:doc_id => self._id.to_s, :pos => pos)
           version
         end
       end
