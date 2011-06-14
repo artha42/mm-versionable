@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.require_paths                 = ['lib']
   s.authors                       = ['Dhruva Sagar']
   s.email                         = 'dhruva.sagar@gmail.com'
-  s.version                       = Versionable::Version
+  s.version                       = Versionable::VERSION
   s.platform                      = Gem::Platform::RUBY
   s.files                         = Dir.glob('lib/**/*') + %w[config.ru Gemfile Rakefile README.md]
   s.test_files                    = Dir.glob('test/**/*')
