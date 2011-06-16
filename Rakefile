@@ -26,10 +26,10 @@ desc 'Builds the gem'
 task :build do
   sh 'gem build mm-versionable.gemspec'
   Dir.mkdir('pkg') unless File.directory?('pkg')
-  sh "mv mm-versionable-#{Versionable::Version}.gem pkg/mm-versionable-#{Versionable::Version}.gem"
+  sh "mv mm-versionable-#{Versionable::VERSION}.gem pkg/mm-versionable-#{Versionable::VERSION}.gem"
 end
 
 desc 'Builds and Installs the gem'
 task :install => :build do
-  sh "gem install pkg/mm-versionable-#{Versionable::Version}.gem"
+  sh "gem install pkg/mm-versionable-#{Versionable::VERSION}.gem"
 end
