@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift('.') unless $LOAD_PATH.include?('.')
 
-require 'test/config/config'
 require File.expand_path(File.dirname(__FILE__) + '/../lib/versionable')
+require 'test/config/config'
 
 require 'pp'
 require 'shoulda'

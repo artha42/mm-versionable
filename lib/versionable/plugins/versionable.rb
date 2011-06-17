@@ -1,4 +1,4 @@
-require 'versionable/models/version'
+autoload :Version, 'versionable/models/version'
 
 module Versionable
   extend ActiveSupport::Concern
