@@ -18,6 +18,9 @@ Usage
 -----
 The following example should demonstrate how to use versioning well :
 
+    require 'mongo_mapper'
+    require 'config'  # Since versionable defines it's own Version model and has a few indexes defined for the same, 
+                      # we need to load & configure mongo_mapper before we can load versionable.
     require 'versionable' 
     # gem 'mm-versionable', :require => 'versionable' -- Put this in your Gemfile if you're using bundler
 
