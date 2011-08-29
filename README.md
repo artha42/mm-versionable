@@ -41,6 +41,10 @@ The following example should demonstrate how to use versioning well :
     #example :
     #thing.save :updater_id => "4cef9936f61aa33717000001"
 
+    #Also you can now pass :updater_id to update_attrubytes
+    #example :
+    #thing.update_attributes(:updater_id => "4cef9936f61aa33717000001", params[:thing])
+
     thing.versions_count 
     #=> 2
 

@@ -4,7 +4,12 @@ module Versionable
   extend ActiveSupport::Concern
 
   module InstanceMethods
-    # Save new versions but only if the data changes
+    def update_attributes(attrs={})
+      updater_id = attrs.delete(:updater_id)
+      assign(attrs)
+      save_version(updater_id) if self.respond_to?(:rolling_back) && !rolling_back
+    end
+
     def save(options={})
       save_version(options.delete(:updater_id)) if self.respond_to?(:rolling_back) && !rolling_back
       super
@@ -27,7 +32,11 @@ module Versionable
           self.versions << version
           self.version_number = version.pos
 
-          @versions_count = @versions_count.to_i + 1
+          if @versions_count
+            @versions_count = @versions_count + 1
+          else
+            @versions_count = Version.count(:doc_id => self._id.to_s)
+          end
         end
       end
     end

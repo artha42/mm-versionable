@@ -3,10 +3,12 @@ class Version
 
   key :data, Hash
   key :date, Time
-  key :pos, Integer, :index => true
-  key :doc_id, String, :index => true
+  key :pos, Integer
+  key :doc_id, String
   key :message, String
   key :updater_id, String
+
+  ensure_index [[:doc_id, 1], [:pos, -1]]
 
   def content(key)
     cdata = self.data[key]

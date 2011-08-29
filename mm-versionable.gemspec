@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'differ'
   s.add_dependency 'builder'
   s.add_dependency 'bson_ext'
-  s.add_dependency 'mongo_mapper'
+  s.add_dependency 'mongo_mapper', '>= 0.9.0'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'shoulda'
