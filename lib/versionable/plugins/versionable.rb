@@ -7,7 +7,7 @@ module Versionable
     def update_attributes(attrs={})
       updater_id = attrs.delete(:updater_id)
       assign(attrs)
-      save_version(updater_id) if self.respond_to?(:rolling_back) && !rolling_back
+      save(:updater_id => updater_id)
     end
 
     def save(options={})

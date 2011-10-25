@@ -115,6 +115,8 @@ class VersioningTest < Test::Unit::TestCase
     should 'create a new version for changes' do
       versions_count = @user.versions_count
       @user.update_attributes(:fname => 'Dave')
+      @user.reload
+      assert_equal @user.fname, 'Dave'
       assert_equal @user.versions_count, (versions_count + 1)
     end
     should 'not create a new version without changes' do
