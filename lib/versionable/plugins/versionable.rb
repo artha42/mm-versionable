@@ -28,7 +28,7 @@ module Versionable
           version.updater_id = updater_id
           version.save
 
-          self.versions.shift if self.versions.count >= @limit
+          self.versions.shift if self.class.version_limit && self.versions.count >= self.class.version_limit
           self.versions << version
           self.version_number = version.pos
 
@@ -43,7 +43,15 @@ module Versionable
   end
 
   module ClassMethods
+    attr_accessor :version_limit
+    
+    def version(opts={})
+      enable_versioning(opts)
+    end
+    
     def enable_versioning(opts={})
+      self.version_limit = opts[:limit]
+      
       attr_accessor :rolling_back
 
       key :version_number, Integer, :default => 0
@@ -61,8 +69,11 @@ module Versionable
       end
 
       define_method(:versions) do
-        @limit ||= opts[:limit] || 10
-        @versions ||= Version.all(:doc_id => self._id.to_s, :order => 'pos desc', :limit => @limit).reverse
+        @versions ||= begin 
+          query = { doc_id: self._id.to_s, order: 'pos desc' }
+          query[:limit] = self.class.version_limit
+          Version.all(query).reverse
+        end
       end
 
       define_method(:all_versions) do

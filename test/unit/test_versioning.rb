@@ -1,10 +1,15 @@
 require 'test_helper'
 
-class VersioningTest < Test::Unit::TestCase
+class VersioningTest < ActiveSupport::TestCase
+  setup do
+    @user = create_user
+  end
+  
+  teardown do
+    cleanup
+  end
+  
   context 'Versioning enabled' do
-    setup do
-      @user = User.first
-    end
     should 'respond to method version_message' do
       assert @user.respond_to?(:version_message)
     end
@@ -42,8 +47,14 @@ class VersioningTest < Test::Unit::TestCase
 
   context 'Version manipulations' do
     setup do
-      @user = User.first
+      @user.fname = 'Dhruva'
+      @user.lname = 'Sagar'
+      @user.save!
+      
+      @user.posts << Post.new(title: 'Dummy title', body: 'Dummy post body', date: Time.now)
+      @user.save!
     end
+    
     should 'return the total versions_count' do
       assert @user.versions_count
     end
@@ -107,11 +118,34 @@ class VersioningTest < Test::Unit::TestCase
       assert_equal initial_version_number, user.version_number
     end
   end
+  
+  context 'Versioning with limit' do
+    should 'not limit number of versions' do
+      assert_equal 1, @user.versions.size
+      (1..25).each do |n|
+        @user.fname = "#{@user.fname}#{n}"
+        @user.save!
+      end
+      assert_equal 20, @user.versions.size
+    end
+  end
+  
+  context 'Versioning with no limit' do
+    setup do 
+      User.version_limit = nil
+    end
+    
+    should 'not limit number of versions' do
+      assert_equal 1, @user.versions.size
+      (1..25).each do |n|
+        @user.fname = "#{@user.fname}#{n}"
+        @user.save!
+      end
+      assert_equal 26, @user.versions.size
+    end
+  end
 
   context 'Versioning with update_attributes' do
-    setup do
-      @user = User.first
-    end
     should 'create a new version for changes' do
       versions_count = @user.versions_count
       @user.update_attributes(:fname => 'Dave')
@@ -127,9 +161,6 @@ class VersioningTest < Test::Unit::TestCase
   end
 
   context 'assigning updater_id' do
-    setup do
-      @user = User.first
-    end
     should 'create a new version and update the updater_id for save' do
       versions_count = @user.versions_count
       @user.fname = 'Updater1'
