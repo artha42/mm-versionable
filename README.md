@@ -24,9 +24,8 @@ The following example should demonstrate how to use versioning well :
     class Thing
         include MongoMapper::Document
 
-        enable_versioning :limit => 20
-        #:limit here defines the size of the version history that will be loaded into memory,
-        #By default, if not specified, the value is 10, if you wish to load all versions set it to 0
+        # Store a maximum of 20 versions of a thing. Default is to store an unlimited number of versions.
+        versioned :max => 20
 
         key :name, String, :required => true
         key :date, Time
@@ -50,6 +49,9 @@ The following example should demonstrate how to use versioning well :
 
     thing.versions
     #=&gt; [#&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Dhruva Sagar&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;, #&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000003'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Change Thing&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 1, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;]
+    
+    thing.versions(:limit => 1)
+    #=> [#<Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {"_id"=>BSON::ObjectId('4cef96c4f61aa33621000001'), "version_message"=>nil, "version_number"=>nil, "name"=>"Dhruva Sagar", "date"=>2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: "4cef96c4f61aa33621000001", message: nil, updater_id: nil>]
 
     thing.all_versions
     #=&gt; #&lt;Plucky::Query doc_id: &quot;4cef96c4f61aa33621000001&quot;, sort: [[&quot;pos&quot;, -1]]&gt; 

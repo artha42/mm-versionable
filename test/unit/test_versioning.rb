@@ -119,8 +119,8 @@ class VersioningTest < ActiveSupport::TestCase
     end
   end
   
-  context 'Versioning with limit' do
-    should 'not limit number of versions' do
+  context 'Versioning with max number of versions' do
+    should 'limit number of versions' do
       assert_equal 1, @user.versions.size
       (1..25).each do |n|
         @user.fname = "#{@user.fname}#{n}"
@@ -130,12 +130,12 @@ class VersioningTest < ActiveSupport::TestCase
     end
   end
   
-  context 'Versioning with no limit' do
+  context 'Versioning with no maximum' do
     setup do 
-      User.version_limit = nil
+      User.max_versions = nil
     end
     
-    should 'not limit number of versions' do
+    should 'allow unlimited number' do
       assert_equal 1, @user.versions.size
       (1..25).each do |n|
         @user.fname = "#{@user.fname}#{n}"

@@ -1,7 +1,7 @@
 class User
   include MongoMapper::Document
 
-  version limit: 20
+  versioned max: 20
 
   key :fname, String
   key :lname, String
