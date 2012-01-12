@@ -24,8 +24,16 @@ The following example should demonstrate how to use versioning well :
     class Thing
         include MongoMapper::Document
 
-        # Store a maximum of 20 versions of a thing. Default is to store an unlimited number of versions.
-        versioned :max => 20
+        # Declare that Thing is a versioned document.
+        # The available options are shown with their defaults. 
+        #   * max     - the maximum number of versions for each thing instance. 
+        #               no maximum by default.
+        #   * destroy - when a thing is destroyed, destroy all of its versions. 
+        #               versions will be destroyed with their doc, by default.
+        #   * prune   - destroy oldest versions when max is exceeded.
+        #               old versions will be pruned by default. 
+        #               use #all_versions to retrieve old versions when :prune is false.
+        versioned :max => nil, :destroy => true, :prune => true
 
         key :name, String, :required => true
         key :date, Time
@@ -47,9 +55,13 @@ The following example should demonstrate how to use versioning well :
     thing.versions_count 
     #=> 2
 
+    # Return the versions of this doc. If :prune is false, then this method will never return
+    # more than :max number of versions. To get all versions, use the #all_versions method.
     thing.versions
     #=&gt; [#&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000002'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Dhruva Sagar&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 0, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;, #&lt;Version _id: BSON::ObjectId('4cef96c4f61aa33621000003'), data: {&quot;_id&quot;=&gt;BSON::ObjectId('4cef96c4f61aa33621000001'), &quot;version_message&quot;=&gt;nil, &quot;version_number&quot;=&gt;nil, &quot;name&quot;=&gt;&quot;Change Thing&quot;, &quot;date&quot;=&gt;2010-11-26 11:15:16 UTC}, date: 2010-11-26 11:15:16 UTC, pos: 1, doc_id: &quot;4cef96c4f61aa33621000001&quot;, message: nil, updater_id: nil&gt;]
-
+     
+    # Return all versions. When :prune is true, this method returns the same list as #versions.
+    # When :prune is false, this method returns all versions, even those that exceed the :max.
     thing.all_versions
     #=&gt; #&lt;Plucky::Query doc_id: &quot;4cef96c4f61aa33621000001&quot;, sort: [[&quot;pos&quot;, -1]]&gt; 
 

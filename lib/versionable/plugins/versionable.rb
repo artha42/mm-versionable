@@ -2,6 +2,10 @@ autoload :Version, 'versionable/models/version'
 
 module Versionable
   extend ActiveSupport::Concern
+  
+  included do
+    after_destroy :destroy_versions!
+  end
 
   module InstanceMethods
     def update_attributes(attrs={})
@@ -28,7 +32,10 @@ module Versionable
           version.updater_id = updater_id
           version.save
 
-          self.versions.shift if self.class.max_versions && self.versions.count >= self.class.max_versions
+          if self.class.max_versions && self.versions.count >= self.class.max_versions
+            extraneous = self.versions.shift 
+            extraneous.destroy if self.class.prune_versions?
+          end
           self.versions << version
           self.version_number = version.pos
 
@@ -40,10 +47,24 @@ module Versionable
         end
       end
     end
+  
+    private
+    def destroy_versions!
+      Version.destroy_all(doc_id: self._id.to_s) if self.class.destroy_versions?
+    end
   end
 
   module ClassMethods
     attr_accessor :max_versions
+    attr_writer :destroy_versions, :prune_versions
+    
+    def destroy_versions?
+      @destroy_versions
+    end
+    
+    def prune_versions?
+      @prune_versions
+    end
     
     def versioned(opts={})
       enable_versioning(opts)
@@ -51,6 +72,8 @@ module Versionable
     
     def enable_versioning(opts={})
       self.max_versions = opts[:max] || opts[:limit]
+      self.destroy_versions = opts[:destroy] != false # destroy if option is unspecified
+      self.prune_versions = opts[:prune] != false     # prune if options is unspecified
       
       attr_accessor :rolling_back
 

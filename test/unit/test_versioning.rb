@@ -2,6 +2,8 @@ require 'test_helper'
 
 class VersioningTest < ActiveSupport::TestCase
   setup do
+    User.destroy_versions = true
+    User.prune_versions = true
     @user = create_user
   end
   
@@ -128,6 +130,34 @@ class VersioningTest < ActiveSupport::TestCase
       end
       assert_equal 20, @user.versions.size
     end
+    
+    should 'get all versions' do
+      User.prune_versions = false
+      assert_equal 1, @user.versions.size
+      (1..25).each do |n|
+        @user.fname = "#{@user.fname}#{n}"
+        @user.save!
+      end
+      assert_equal 20, @user.versions.size
+      assert_equal 26, @user.all_versions.size
+    end
+    
+    should 'prune extraneous versions by default' do
+      (1..25).each do |n|
+        @user.fname = "#{@user.fname}#{n}"
+        @user.save!
+      end
+      assert_equal 20, Version.all.size
+    end
+    
+    should 'not prune extraneous versions' do
+      User.prune_versions = false
+      (1..25).each do |n|
+        @user.fname = "#{@user.fname}#{n}"
+        @user.save!
+      end
+      assert_equal 26, Version.all.size
+    end
   end
   
   context 'Versioning with no maximum' do
@@ -142,6 +172,31 @@ class VersioningTest < ActiveSupport::TestCase
         @user.save!
       end
       assert_equal 26, @user.versions.size
+    end
+  end
+  
+  context 'Destroying versioned doc' do
+    should 'destroys all versions by default' do
+      assert_equal 1, @user.versions.size
+      assert_equal 1, Version.all.size
+      @user.destroy
+      assert_equal 0, Version.all.size
+    end
+    
+    should 'not destroy all versions' do
+      User.destroy_versions = false
+      assert_equal 1, @user.versions.size
+      assert_equal 1, Version.all.size
+      @user.destroy
+      assert_equal 1, Version.all.size
+    end
+    
+    should 'not destroy versions of other docs' do
+      @user2 = create_user
+      assert_equal 2, Version.all.size
+      @user.destroy
+      assert_equal 1, Version.all.size
+      assert_equal 1, @user2.versions.size
     end
   end
 
