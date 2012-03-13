@@ -3,40 +3,38 @@ autoload :Version, 'versionable/models/version'
 module Versionable
   extend ActiveSupport::Concern
 
-  module InstanceMethods
-    def update_attributes(attrs={})
-      updater_id = attrs.delete(:updater_id)
-      assign(attrs)
-      save(:updater_id => updater_id)
-    end
+  def update_attributes(attrs={})
+    updater_id = attrs.delete(:updater_id)
+    self.attributes = attrs
+    save(:updater_id => updater_id)
+  end
 
-    def save(options={})
-      save_version(options.delete(:updater_id)) if self.respond_to?(:rolling_back) && !rolling_back
-      super
-    end
+  def save(options={})
+    save_version(options.delete(:updater_id)) if self.respond_to?(:rolling_back) && !rolling_back
+    super
+  end
 
-    def save_version(updater_id=nil)
-      if self.respond_to?(:versions)
-        version = self.current_version
-        version.message = self.version_message
-        if self.versions.empty?
-          version.pos = 0
+  def save_version(updater_id=nil)
+    if self.respond_to?(:versions)
+      version = self.current_version
+      version.message = self.version_message
+      if self.versions.empty?
+        version.pos = 0
+      else
+        version.pos = self.versions.last.pos + 1
+      end
+      if self.version_at(self.version_number).try(:data) != version.data
+        version.updater_id = updater_id
+        version.save
+
+        self.versions.shift if self.versions.count >= @limit
+        self.versions << version
+        self.version_number = version.pos
+
+        if @versions_count
+          @versions_count = @versions_count + 1
         else
-          version.pos = self.versions.last.pos + 1
-        end
-        if self.version_at(self.version_number).try(:data) != version.data
-          version.updater_id = updater_id
-          version.save
-
-          self.versions.shift if self.versions.count >= @limit
-          self.versions << version
-          self.version_number = version.pos
-
-          if @versions_count
-            @versions_count = @versions_count + 1
-          else
-            @versions_count = Version.count(:doc_id => self._id.to_s)
-          end
+          @versions_count = Version.count(:doc_id => self._id.to_s)
         end
       end
     end
@@ -132,3 +130,4 @@ module Versionable
     end
   end
 end
+
