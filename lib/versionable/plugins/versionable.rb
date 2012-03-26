@@ -74,7 +74,9 @@ module Versionable
         version = self.version_at(pos)
 
         if version
-          self.attributes = version.data
+          self.attributes.keys.each do |key|
+            self.send(:"#{key}=", version.data[key])
+          end
         end
 
         self.version_number = version.pos
