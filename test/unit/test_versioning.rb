@@ -106,6 +106,13 @@ class VersioningTest < Test::Unit::TestCase
       user.reload
       assert_equal initial_version_number, user.version_number
     end
+    should "allow protected attributes to be changed" do
+      user = User.create :fname => 'Dave', :lname => 'Smiggins'
+      user.address = "123 Main St"
+      user.save
+      user.rollback!(:first)
+      assert_equal nil, user.address
+    end
   end
 
   context 'Versioning with update_attributes' do
