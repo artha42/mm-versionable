@@ -38,6 +38,9 @@ class VersioningTest < Test::Unit::TestCase
     should 'respond to method save_version' do
       assert @user.respond_to?(:save_version)
     end
+    should 'respond to method delete_version' do
+      assert @user.respond_to?(:delete_version)
+    end
   end
 
   context 'Version manipulations' do
@@ -112,6 +115,28 @@ class VersioningTest < Test::Unit::TestCase
       user.save
       user.rollback!(:first)
       assert_equal nil, user.address
+    end
+  end
+
+  context 'deleting versions' do
+    setup do
+      @user = User.create :fname => 'Dhruva', :lname => 'Sagar'
+      @user.posts << Post.new(:title => 'New', :body => 'Test', :date => Time.now)
+      @user.save
+    end
+    should "delete all versions on calling delete_version with :all as argument" do
+      @user.delete_version(:all)
+      assert @user.versions_count == 0
+      assert @user.all_versions.count == 0
+    end
+    should "delete specific version on calling delete_version with position index as argument and reset position of all subsequent versions" do
+      versions_count = @user.versions_count
+      @user.delete_version(:first)
+      assert_equal @user.version_at(:first).pos, 0
+      assert_equal versions_count, (@user.versions_count + 1)
+    end
+    teardown do
+      @user.delete
     end
   end
 

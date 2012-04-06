@@ -10,7 +10,8 @@ module Versionable
   end
 
   def save(options={})
-    save_version(options.delete(:updater_id)) if self.respond_to?(:rolling_back) && !rolling_back
+    updater_id = options.delete(:updater_id)
+    save_version(updater_id) if self.respond_to?(:rolling_back) && !rolling_back
     super
   end
 
@@ -65,6 +66,21 @@ module Versionable
 
       define_method(:all_versions) do
         Version.where(:doc_id => self._id.to_s).sort(:pos.desc)
+      end
+
+      define_method(:delete_version) do |pos|
+        case pos
+        when :all
+          @versions_count = 0
+          self.all_versions.each(&:delete)
+        else
+          @versions_count -= 1
+          self.version_at(pos).delete
+          # resetting position of all versions after the one at pos
+          self.all_versions.where(['pos > ?', pos]).each do |version|
+            version.update_attributes(:pos => version.pos - 1)
+          end
+        end
       end
 
       define_method(:rollback) do |*args|
@@ -132,4 +148,3 @@ module Versionable
     end
   end
 end
-
