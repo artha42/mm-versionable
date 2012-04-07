@@ -94,6 +94,12 @@ The following example should demonstrate how to use versioning well :
     thing.delete_version(:all) # This will delete all versions and reset versions_count to 0
     # Or
     thing.delete_version(1) # This will delete the version at pos = 1, and reset the pos of all subsequent versions to one less to maintain linear sequence.
+    # delete_version API pos follows he version_at API in that you can use :first, :current, :last, :latest 
+    thing.delete_version(:first)
+    thing.delete_version(:current)
+    thing.delete_version(:last)
+    thing.delete_version(:latest)
+
 
 Problems or Questions?
 ----------------------
