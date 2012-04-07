@@ -91,6 +91,10 @@ The following example should demonstrate how to use versioning well :
     thing.version_at(10)
     #=> nil
 
+    thing.delete_version(:all) # This will delete all versions and reset versions_count to 0
+    # Or
+    thing.delete_version(1) # This will delete the version at pos = 1, and reset the pos of all subsequent versions to one less to maintain linear sequence.
+
 Problems or Questions?
 ----------------------
 Hit up on the mongomapper google group:
