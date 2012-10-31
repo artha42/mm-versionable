@@ -176,4 +176,16 @@ class VersioningTest < Test::Unit::TestCase
       assert_equal @user.version_at(:latest).updater_id, 'test_id_2'
     end
   end
+
+  context 'A model with nil values' do
+    setup do
+      @user = User.create
+    end
+    should 'save a new version wihout saving the model and rollback to the latest attributes' do
+      @user.fname = 'Aaron'
+      @user.save_version
+      @user.reload.rollback(:latest)
+      assert_equal @user.fname, 'Aaron'
+    end
+  end
 end
