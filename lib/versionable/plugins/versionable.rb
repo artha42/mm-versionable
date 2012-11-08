@@ -90,8 +90,9 @@ module Versionable
         version = self.version_at(pos)
 
         if version
-          self.attributes.keys.each do |key|
-            self.send(:"#{key}=", version.data[key])
+          possible_keys = (self.attributes.keys + version.data.keys).uniq.compact
+          possible_keys.each do |key|
+            self.send(:"#{key}=", version.data[key]) if self.respond_to?(:"#{key}=")
           end
         end
 
