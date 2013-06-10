@@ -11,7 +11,10 @@ module Versionable
 
   def save(options={})
     updater_id = options.delete(:updater_id)
-    save_version(updater_id) if self.respond_to?(:rolling_back) && !rolling_back
+    skip_version = options.delete(:skip_version)
+    unless skip_version == true
+      save_version(updater_id) if self.respond_to?(:rolling_back) && !rolling_back
+    end
     super
   end
 

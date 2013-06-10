@@ -94,6 +94,13 @@ class VersioningTest < Test::Unit::TestCase
       @user.save
       assert_equal versions_count, @user.versions_count
     end
+    should 'respect the skip_version option' do
+      user = User.create :fname => 'Bobby', :lname => 'Tables', :email => 'bobby@example.com'
+      versions_count = user.versions_count
+      user.email = 'robert@example.com'
+      user.save(:skip_version => true)
+      assert_equal versions_count, user.versions_count
+    end
     should 'revert to latest version on rollback!' do
       @user.rollback!(:latest)
       assert @user.fname == 'Dhruva'
